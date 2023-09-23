@@ -33,7 +33,13 @@ exports.register = async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ message: 'Registration successful' });
+
+    // Create and sign a JWT token
+    const token = jwt.sign({ _id: newUser._id }, jwtSecretKey, {
+      expiresIn: '24h', // You can adjust the expiration time
+    });
+
+    res.json({status: true, message: "Registration successful", token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -68,3 +74,24 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+// Login a user
+exports.fetchUser = async (req, res) => {
+  try {
+    const user_id = req.user._id
+
+    // Check if the email exists
+    const user = await User.findById(user_id);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Account Not Found' });
+    }
+
+    res.json({status: true, message: "success", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+
+}
