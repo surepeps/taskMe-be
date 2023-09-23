@@ -68,7 +68,7 @@ exports.login = async (req, res) => {
       expiresIn: '24h', // You can adjust the expiration time
     });
 
-    res.json({status: true, message: "success", token });
+    res.json({status: true, message: "Login Successful", token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
