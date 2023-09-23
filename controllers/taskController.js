@@ -3,11 +3,12 @@ const Task = require('../models/Task');
 // Create a new task
 exports.createTask = async (req, res) => {
   try {
-    const { task, user_id, to_user, description, status } = req.body;
+    const userId = req.user._id;
+    const { task, to_user, description, status } = req.body;
 
     const newTask = new Task({
       task,
-      user_id,
+      user_id: userId,
       to_user,
       description,
       status,
@@ -16,7 +17,8 @@ exports.createTask = async (req, res) => {
     });
 
     await newTask.save();
-    res.status(201).json(newTask);
+
+    res.status(201).json({status: true, message: 'Task saved successfully'});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -28,12 +30,8 @@ exports.getTasks = async (req, res) => {
   try {
     const ownerTaskId = req.params.user_id;
 
-    const tasks = await Task.find({
-      where: {
-        user_id: ownerTaskId
-      }
-    });
-    res.json(tasks);
+    const tasks = await Task.find({user_id: ownerTaskId});
+    res.json({status:true, message: 'success', tasks});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

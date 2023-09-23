@@ -15,7 +15,7 @@ router.use(authMiddleware);
 
 router.get('/user', authController.fetchUser);
 router.post('/task', taskController.createTask);
-router.get('/task:user_id', taskController.getTasks);
+router.get('/task/:user_id', taskController.getTasks);
 router.get('/:id', taskController.getTaskById);
 router.put('/:id', taskController.updateTask);
 router.delete('/:id', taskController.deleteTask);
